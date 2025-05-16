@@ -1,0 +1,22 @@
+# Datensatz-Konfiguration
+dataset:
+  file: 'SR_std'  # Name der Datensatzdatei ohne Erweiterung
+  path: 'Master_Data'        # Pfad zu den Rohdaten
+  sorted_path: 'sorted_data' # Pfad für verarbeitete Daten
+
+# Modellparameter
+model:
+  type: 'LSTM'               # Modelltyp ist jetzt auf LSTM festgelegt
+  learning_rate: 0.0005
+  loss_function: 'mse'
+  epochs: 600
+  batch_size: 64
+  neurons_per_layer: 5
+  hidden_layers: 4
+
+# GPU-Konfiguration
+gpu:
+  enabled: true              # GPU aktivieren/deaktivieren
+  memory_growth: true        # Dynamisches Speicherwachstum
+  mixed_precision: true      # Mixed-Precision-Training
+  threads: 16                # Anzahl der Threads

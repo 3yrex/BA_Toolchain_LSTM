@@ -1,0 +1,111 @@
+"""
+LSTM-Zeitreihenvorhersage Projekt - Zusammenfassung
+===================================================
+
+Dieses Dokument enthält eine strukturierte Übersicht der Haupt-Komponenten, aktuellen 
+Implementierungsdetails und relevanten Anpassungen des LSTM-Modells zur Zeitreihenvorhersage.
+
+Letzte Aktualisierung: 2025-05-14
+"""
+
+#------------------------------------------------------------------------------
+# 1. PROJEKTSTRUKTUR UND KOMPONENTEN
+#------------------------------------------------------------------------------
+
+"""
+Hauptkomponenten des Projekts:
+
+- ModelManager: Verantwortlich für die Modellarchitektur, Erstellung, Kompilierung, Speicherung/Laden
+- ModelTrainer: Trainingslogik, Callbacks, Verlaufsaufzeichnung und -visualisierung
+- Datenaufbereitung: Sequenzgenerierung, Normalisierung und Dataset-Erstellung
+- Konfiguration: YAML-basierte Konfiguration für Modell- und Trainingsparameter
+"""
+
+#------------------------------------------------------------------------------
+# 2. MODELLARCHITEKTUR
+#------------------------------------------------------------------------------
+
+"""
+Aktuelle LSTM-Konfiguration:
+- Stapelweise LSTM-Schichten (LSTM-Stacks)
+- Anzahl der Schichten und Neuronen per YAML konfigurierbar
+- Sequence-Length: Parameter für die Länge der Eingabe-Sequenzen (Standard: 64)
+- Learning Rate: Konfigurierbar (Standard: 0.00025)
+- Aktivierungsfunktionen: ReLU in den Hidden Layers, Lineare Aktivierung in der Output-Schicht
+"""
+
+#------------------------------------------------------------------------------
+# 3. TRAINING UND OPTIMIERUNG
+#------------------------------------------------------------------------------
+
+"""
+Trainingsansatz:
+- Batch-Size: Konfigurierbar (Standard: 64) 
+- Epochs: Konfigurierbar (Standard: 630)
+- Early Stopping: Überwacht val_loss mit Patience=30, speichert beste Gewichte
+- LR-Scheduler: ReduceLROnPlateau bei Plateau im val_loss (Faktor 0.5, Patience=10)
+- LRLogger: Benutzerdefinierter Callback zur Aufzeichnung der Learning Rate pro Epoche
+
+Verlustfunktionen (in der YAML-Datei konfigurierbar):
+- Standardmäßig: MSE (Mean Squared Error)
+- Alternativen: MAE, Huber Loss, Log-Cosh, MSLE
+"""
+
+#------------------------------------------------------------------------------
+# 4. AKTUELLE BESONDERHEITEN UND ANPASSUNGEN
+#------------------------------------------------------------------------------
+
+"""
+Wichtige aktuelle Implementierungsdetails:
+
+1. LRLogger-Implementation:
+   - Aufzeichnung der Learning Rate in jeder Epoche
+   - Speicherung im History-Objekt für die Visualisierung
+   - Fallback für konstante Learning Rates
+
+2. Visualisierung:
+   - 3-Panel-Plot für Training History:
+     - Loss (Training und Validation)
+     - MAE/MSE (Training und Validation)
+     - Learning Rate (logarithmische Skala)
+
+3. Feature-Engineering-Überlegungen:
+   - Zeitliche Ableitungen (wie Differenzen) können als zusätzliche Features bereitgestellt werden
+   - LSTMs können theoretisch temporale Beziehungen selbst lernen, aber explizite Derivate können hilfreich sein
+"""
+
+#------------------------------------------------------------------------------
+# 5. YAML-KONFIGURATIONSBEISPIEL
+#------------------------------------------------------------------------------
+
+"""
+Beispiel für eine YAML-Konfiguration:
+
+model:
+  model_type: 'LSTM'
+  hidden_layers: 4
+  neurons_per_layer: 5
+  sequence_length: 64
+  learning_rate: 0.00025
+  epochs: 630
+  batch_size: 64
+  loss_function: 'mse'  # Alternativen: 'mae', 'huber_loss', 'log_cosh', 'msle'
+"""
+
+#------------------------------------------------------------------------------
+# 6. ZUKÜNFTIGE ÜBERLEGUNGEN
+#------------------------------------------------------------------------------
+
+"""
+Mögliche Erweiterungen und Experimente:
+
+1. Batch-Size-Experimente:
+   - Tests mit verschiedenen Batch-Sizes (16, 32, 128) für Geschwindigkeit vs. Generalisierung
+
+2. Alternative Verlustfunktionen:
+   - Benutzerdefinierte Verlustfunktionen wie gewichteter MSE oder direktionale Verluste
+
+3. Feature-Engineering:
+   - Systematische Evaluation des Nutzens zeitlicher Ableitungen als Features
+   - Tests mit Ableitungen über verschiedene Zeitskalen
+"""
